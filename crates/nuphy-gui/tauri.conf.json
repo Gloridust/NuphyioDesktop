@@ -7,7 +7,7 @@
   "app": {
     "withGlobalTauri": true,
     "windows": [
-      { "title": "NuPhy Desktop", "width": 1200, "height": 760, "minWidth": 900, "minHeight": 600 }
+      { "title": "NuPhy Desktop", "width": 1200, "height": 780, "minWidth": 640, "minHeight": 480 }
     ],
     "security": { "csp": null }
   },

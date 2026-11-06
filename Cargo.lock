@@ -2004,6 +2004,7 @@ dependencies = [
  "nuphy-hid",
  "nuphy-proto",
  "serde",
+ "serde_json",
  "tauri",
  "tauri-build",
 ]

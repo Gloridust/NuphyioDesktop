@@ -9,7 +9,7 @@ NuPhy 官方配置工具 [NuPhyIO](https://drive.nuphyio.com) 是纯前端的 We
 - `crates/nuphy-proto`：协议核心（帧编解码、握手、会话、设备表、键位解析），无 I/O，已有单元测试。
 - `crates/nuphy-hid`：Linux hidraw 传输（通过 sysfs 枚举，无需 libudev）。
 - `crates/nuphy-core`：CLI 与 GUI 共用的“打开键盘 / 自动备份 / 还原”逻辑。
-- `crates/nuphy-gui`：桌面图形界面（Tauri 2 + 原生 HTML/JS，无需 node 构建），中英双语，会跟随系统语言，右上角可切换。
+- `crates/nuphy-gui`：桌面图形界面（Tauri 2 + 原生 HTML/JS，无需 node 构建），界面照 NuPhyIO 网页版的样式做，多语言（目前中文、英文）。
 - `crates/nuphy-cli`：命令行工具 `nuphy`：查看（`list` / `info` / `keys` / `get`）、改键（`set` / `reset`）、
   整表备份与还原（`backup` / `restore`）。完全离线，不需要浏览器或网络。
 - 只实现了机械款协议（Node75、Air75 V3 等）；Hall（HE）款只有命令表。
@@ -21,8 +21,15 @@ NuPhy 官方配置工具 [NuPhyIO](https://drive.nuphyio.com) 是纯前端的 We
 cargo run -p nuphy-gui --release   # 需要 libwebkit2gtk-4.1-dev（Ubuntu：sudo apt install libwebkit2gtk-4.1-dev）
 ```
 
-点选键盘图上的一个键 → 输入按键名（或点快捷按钮）→ 应用。橙色圆点表示与出厂设置不同；顶栏“备份”可查看自动备份并还原。
-在普通浏览器里直接打开 `crates/nuphy-gui/dist/index.html` 会进入演示模式，不接键盘，方便预览界面。
+和网页版一样：先点上方键盘图中的一个键，再在下方“按键定义”面板里点新的功能，立即写入键盘（写入前自动备份、写完回读确认）。
+橙色圆点表示与出厂设置不同；“重置”把选中的键恢复出厂；右上角切换模式（如 M1 Mac / M2 Windows）、语言和查看备份。
+旋钮等额外按键在键盘图下方单独列出。在普通浏览器里直接打开 `crates/nuphy-gui/dist/index.html` 会进入演示模式，方便预览界面。
+
+- 键盘外形来自网页版的各型号键位坐标，由 `tools/gen_layouts.py` 生成 `dist/layouts.js`（只保留几何信息和普通按键码）；
+  画图前会把坐标和键盘读出的出厂键位逐行对照，对不上就退回按矩阵排列显示。
+- 加一种界面语言：在 `dist/locales/` 里照 `en.js` 新建 `<语言代码>.js`，并在 `locales/index.js` 里登记；
+  `cargo test -p nuphy-gui` 会检查各语言的键和 `{占位符}` 是否与英文一致。
+- 高级按键、灯效、宏、模式设置还没有做（标签页是灰的）。
 
 ## 命令行使用
 
