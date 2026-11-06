@@ -41,7 +41,7 @@ svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 
 /* ---------- top bar ---------- */
 .top {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: nowrap;
   padding: 10px clamp(16px, 3vw, 32px);
   position: sticky; top: 0; z-index: 10; user-select: none; -webkit-user-select: none;
   background: rgba(235, 235, 235, .86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -55,18 +55,23 @@ svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
 .win-ctl button:hover { background: rgba(0, 0, 0, .12); }
 .win-ctl button.close:hover { background: #e5484d; color: #fff; }
 .win-ctl svg { width: 14px; height: 14px; }
-.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; overflow: hidden; }
 .logo {
   width: 28px; height: 28px; border-radius: 8px; background: var(--dark); flex: none;
   box-shadow: inset 0 0 0 3px var(--dark), inset 0 0 0 5px #fff;
 }
 .brand-name { font-weight: 800; letter-spacing: .02em; white-space: nowrap; }
-@media (max-width: 960px) { .brand-name { display: none; } }
-.device { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; min-width: 0; }
-.device strong { color: var(--ink-2); font-weight: 700; white-space: nowrap; }
+@media (max-width: 1180px) { .brand-name { display: none; } }
+@media (max-width: 900px) { .device .meta { display: none; } }
+.device { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; min-width: 0; overflow: hidden; }
+.device strong { color: var(--ink-2); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .device .meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
-.tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+.tools { display: flex; align-items: center; gap: 8px; flex: none; margin-left: auto; }
+@media (max-width: 760px) {
+  .tools { gap: 6px; }
+  .pill-select select { max-width: 104px; text-overflow: ellipsis; }
+}
 
 .pill-select {
   position: relative; display: inline-flex; align-items: center; gap: 6px;
@@ -175,7 +180,7 @@ main {
 
 /* row under the keyboard */
 .board-bar {
-  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: nowrap;
 }
 .key-info {
   flex: 1 1 320px; min-width: 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
