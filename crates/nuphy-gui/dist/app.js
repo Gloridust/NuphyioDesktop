@@ -406,6 +406,21 @@ $("#mode-select").addEventListener("change", ev => {
   S.sel = null;
   renderHeader(); refreshViews();
 });
+// Frameless window: the top bar drags the window, double-click maximizes.
+(() => {
+  const win = window.__TAURI__ && window.__TAURI__.window && window.__TAURI__.window.getCurrentWindow();
+  if (!win) return;
+  $("#win-ctl").hidden = false;
+  $("#win-min").addEventListener("click", () => win.minimize());
+  $("#win-max").addEventListener("click", () => win.toggleMaximize());
+  $("#win-close").addEventListener("click", () => win.close());
+  const interactive = el => el.closest("button, select, input, label, a");
+  const bar = $("#titlebar");
+  bar.addEventListener("mousedown", ev => {
+    if (ev.button !== 0 || interactive(ev.target)) return;
+    if (ev.detail === 2) win.toggleMaximize(); else win.startDragging();
+  });
+})();
 $("#lang-select").addEventListener("change", ev => i18n.use(ev.target.value));
 document.addEventListener("keydown", ev => {
   if (ev.key === "Escape") {

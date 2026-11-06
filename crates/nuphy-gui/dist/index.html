@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
+<header class="top" id="titlebar">
   <div class="brand">
     <span class="logo" aria-hidden="true"></span>
     <span class="brand-name" data-i18n="app.title">NuPhy Desktop</span>
@@ -29,6 +29,17 @@
     <button id="btn-refresh" class="icon-btn" data-i18n-title="conn.refresh">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.7 6.3A8 8 0 1 0 19.7 14h-2.1a6 6 0 1 1-1.4-6.2L13 11h7V4l-2.3 2.3Z"/></svg>
     </button>
+    <div class="win-ctl" id="win-ctl" hidden>
+      <button id="win-min" data-i18n-title="win.min">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z"/></svg>
+      </button>
+      <button id="win-max" data-i18n-title="win.max">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5V5Zm2 2v10h10V7H7Z"/></svg>
+      </button>
+      <button id="win-close" class="close" data-i18n-title="common.close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6 10.6 12 5 6.4 6.4 5Z"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 

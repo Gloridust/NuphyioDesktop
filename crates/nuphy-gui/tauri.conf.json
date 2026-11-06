@@ -3,13 +3,30 @@
   "productName": "NuPhy Desktop",
   "version": "0.1.0",
   "identifier": "io.github.gloridust.nuphy-desktop",
-  "build": { "frontendDist": "./dist" },
+  "build": {
+    "frontendDist": "./dist"
+  },
   "app": {
     "withGlobalTauri": true,
     "windows": [
-      { "title": "NuPhy Desktop", "width": 1200, "height": 780, "minWidth": 640, "minHeight": 480 }
+      {
+        "label": "main",
+        "title": "NuPhy Desktop",
+        "width": 1200,
+        "height": 780,
+        "minWidth": 640,
+        "minHeight": 480,
+        "decorations": false
+      }
     ],
-    "security": { "csp": null }
+    "security": {
+      "csp": null
+    }
   },
-  "bundle": { "active": false, "icon": ["icons/icon.png"] }
+  "bundle": {
+    "active": false,
+    "icon": [
+      "icons/icon.png"
+    ]
+  }
 }

@@ -4,6 +4,8 @@ I18N_REGISTER("zh-CN", {
   "common.close": "关闭",
   "common.apply": "应用",
   "common.copy": "复制",
+  "win.min": "最小化",
+  "win.max": "最大化",
   "common.copied": "已复制",
   "conn.refresh": "重新读取键盘",
   "conn.connect": "连接",

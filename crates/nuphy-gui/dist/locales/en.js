@@ -4,6 +4,8 @@ I18N_REGISTER("en", {
   "common.close": "Close",
   "common.apply": "Apply",
   "common.copy": "Copy",
+  "win.min": "Minimize",
+  "win.max": "Maximize",
   "common.copied": "Copied",
   "conn.refresh": "Read keyboard again",
   "conn.connect": "Connect",
