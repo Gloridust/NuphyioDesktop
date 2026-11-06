@@ -1,0 +1,10 @@
+[package]
+name = "nuphy-hid"
+description = "HID transports for NuPhy keyboards (Linux hidraw)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+nuphy-proto = { path = "../nuphy-proto" }
+libc = "0.2"

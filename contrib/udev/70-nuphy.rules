@@ -1,0 +1,6 @@
+# Let the logged-in user talk to NuPhy keyboards over hidraw (needed by the
+# NuPhyIO web app in Chromium and by the `nuphy` CLI). Install with:
+#   sudo cp contrib/udev/70-nuphy.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=hidraw
+# Then unplug/replug the keyboard (or `udevadm trigger`).
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="19f5", TAG+="uaccess"

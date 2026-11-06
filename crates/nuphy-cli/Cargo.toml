@@ -1,0 +1,15 @@
+[package]
+name = "nuphy-cli"
+description = "Command line tool for NuPhy keyboards"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "nuphy"
+path = "src/main.rs"
+
+[dependencies]
+nuphy-proto = { path = "../nuphy-proto" }
+nuphy-hid = { path = "../nuphy-hid" }
+clap = { version = "4", features = ["derive"] }
