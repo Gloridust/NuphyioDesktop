@@ -1,14 +1,14 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::ExitCode;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use clap::{Args, Parser, Subcommand};
-use nuphy_hid::{enumerate, random_bytes, Hidraw, HidrawInfo};
+use nuphy_core::Kb;
+use nuphy_hid::enumerate;
 use nuphy_proto::backup::Backup;
 use nuphy_proto::cmd::mech;
 use nuphy_proto::keycode::parse_codes;
 use nuphy_proto::session::format_firmware_version;
-use nuphy_proto::{device, BaseInfo, Family, KeyCode, Session};
+use nuphy_proto::{device, BaseInfo, Family, KeyCode};
 
 #[derive(Parser)]
 #[command(name = "nuphy", about = "Configure NuPhy keyboards offline")]
@@ -83,12 +83,6 @@ enum Cmd {
     },
 }
 
-struct Kb {
-    s: Session<Hidraw>,
-    info: HidrawInfo,
-    base: BaseInfo,
-}
-
 fn main() -> ExitCode {
     match run(Cli::parse()) {
         Ok(()) => ExitCode::SUCCESS,
@@ -158,13 +152,8 @@ fn run(cli: Cli) -> Result<(), String> {
             let bk = Backup::from_bytes(&bytes)?;
             let mut kb = open(path)?;
             bk.check_compatible(kb.info.vid, kb.info.pid, &kb.base)?;
-            let safety = save_backup(&mut kb, None)?;
-            println!("current matrix saved to {}", safety.display());
-            kb.s.write_keymap(&kb.base, &bk.data).map_err(e2s)?;
-            let now = kb.s.read_keymap(&kb.base).map_err(e2s)?;
-            if now != bk.data {
-                return Err(format!("verify failed after restore; previous state is in {}", safety.display()));
-            }
+            let safety = nuphy_core::restore_backup(&mut kb, &file)?;
+            println!("previous matrix saved to {}", safety.display());
             println!("restored {} bytes from {} (verified)", bk.data.len(), file.display());
             Ok(())
         }
@@ -267,30 +256,6 @@ fn label(k: KeyCode) -> String {
     }
 }
 
-fn backup_dir() -> PathBuf {
-    let base = std::env::var_os("XDG_DATA_HOME")
-        .map(PathBuf::from)
-        .or_else(|| std::env::var_os("HOME").map(|h| Path::new(&h).join(".local/share")))
-        .unwrap_or_else(|| PathBuf::from("."));
-    base.join("nuphy/backups")
-}
-
-fn save_backup(kb: &mut Kb, file: Option<PathBuf>) -> Result<PathBuf, String> {
-    let data = kb.s.read_keymap(&kb.base).map_err(e2s)?;
-    let bk = Backup::new(kb.info.vid, kb.info.pid, &kb.base, data);
-    let path = match file {
-        Some(p) => p,
-        None => {
-            let dir = backup_dir();
-            std::fs::create_dir_all(&dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-            let ts = SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0);
-            dir.join(format!("{:04x}-{ts}.bin", kb.info.pid))
-        }
-    };
-    std::fs::write(&path, bk.to_bytes()).map_err(|e| format!("{}: {e}", path.display()))?;
-    Ok(path)
-}
-
 fn list() -> Result<(), String> {
     let nodes = enumerate().map_err(|e| format!("cannot read /sys/class/hidraw: {e}"))?;
     if nodes.is_empty() {
@@ -320,38 +285,11 @@ fn list() -> Result<(), String> {
 }
 
 fn open(path: Option<PathBuf>) -> Result<Kb, String> {
-    let nodes = enumerate().map_err(|e| e.to_string())?;
-    let info = match path {
-        Some(p) => nodes.into_iter().find(|n| n.path == p).ok_or_else(|| format!("{} is not a NuPhy hidraw node", p.display()))?,
-        None => nodes
-            .into_iter()
-            .find(|n| n.is_config)
-            .ok_or("no NuPhy configuration interface found (try `nuphy list`)")?,
-    };
-    match device::lookup(info.vid, info.pid) {
-        Some(d) if d.family == Family::Mechanical => {}
-        Some(d) => {
-            return Err(format!("{} uses the {:?} protocol family; only the mechanical family is implemented", d.name, d.family))
-        }
-        None => return Err(format!("unknown model {:04x}:{:04x}", info.vid, info.pid)),
-    }
-    let t = Hidraw::open(&info.path).map_err(|e| {
-        if e.kind() == std::io::ErrorKind::PermissionDenied {
-            format!(
-                "cannot open {}: permission denied.\nInstall contrib/udev/70-nuphy.rules (see docs/PROTOCOL.md §10).",
-                info.path.display()
-            )
-        } else {
-            format!("cannot open {}: {e}", info.path.display())
-        }
-    })?;
-    let rnd = random_bytes::<56>().map_err(|e| e.to_string())?;
-    let mut s = Session::open(t, rnd).map_err(e2s)?;
-    let base = s.base_info().map_err(e2s)?;
-    if base.layer_count == 0 || base.rows == 0 || base.cols == 0 {
-        return Err(format!("keyboard reported an empty matrix: {base:?}"));
-    }
-    Ok(Kb { s, info, base })
+    nuphy_core::open(path.as_deref()).map_err(|e| e.to_string())
+}
+
+fn save_backup(kb: &mut Kb, file: Option<PathBuf>) -> Result<PathBuf, String> {
+    nuphy_core::save_backup(kb, file)
 }
 
 fn e2s(e: nuphy_proto::SessionError) -> String {

@@ -222,3 +222,17 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+mod preset_tests {
+    use super::KeyCode;
+
+    /// The GUI's quick-pick buttons; they must all parse and round-trip.
+    #[test]
+    fn gui_presets_parse() {
+        for n in ["esc", "caps", "pscr", "del", "ins", "home", "end", "pgup", "pgdn", "lgui", "mute", "vold", "volu", "mply", "trns", "no"] {
+            let k = KeyCode::parse(n).unwrap_or_else(|e| panic!("{n}: {e}"));
+            assert_eq!(KeyCode::parse(&k.to_string()).unwrap(), k, "{n}");
+        }
+    }
+}

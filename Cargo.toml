@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
-members = ["crates/nuphy-proto", "crates/nuphy-hid", "crates/nuphy-cli"]
+members = ["crates/nuphy-proto", "crates/nuphy-hid", "crates/nuphy-core", "crates/nuphy-cli", "crates/nuphy-gui"]
+# The GUI pulls in Tauri; build it explicitly with `-p nuphy-gui`.
+default-members = ["crates/nuphy-proto", "crates/nuphy-hid", "crates/nuphy-core", "crates/nuphy-cli"]
 
 [workspace.package]
 version = "0.1.0"

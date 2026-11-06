@@ -1,0 +1,10 @@
+[package]
+name = "nuphy-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Shared device-opening and backup logic for the NuPhy CLI and GUI"
+
+[dependencies]
+nuphy-proto = { path = "../nuphy-proto" }
+nuphy-hid = { path = "../nuphy-hid" }

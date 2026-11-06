@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NuPhy Desktop</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"></span>
+    <h1 data-i18n="app.title">NuPhy Desktop</h1>
+  </div>
+  <div id="device" class="device"></div>
+  <div class="tools">
+    <button id="btn-backups" class="ghost" data-i18n="backups.open"></button>
+    <button id="btn-refresh" class="ghost" data-i18n="conn.refresh"></button>
+    <button id="btn-lang" class="ghost" title="Language / 语言">中文 / EN</button>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<aside id="backups" class="drawer" hidden>
+  <div class="drawer-head">
+    <h2 data-i18n="backups.title"></h2>
+    <button id="btn-backups-close" class="ghost" data-i18n="common.close"></button>
+  </div>
+  <p class="muted" data-i18n="backups.hint"></p>
+  <button id="btn-make-backup" class="primary" data-i18n="backups.make"></button>
+  <ul id="backup-list" class="backup-list"></ul>
+</aside>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="i18n.js"></script>
+<script src="api.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -8,12 +8,23 @@ NuPhy 官方配置工具 [NuPhyIO](https://drive.nuphyio.com) 是纯前端的 We
 
 - `crates/nuphy-proto`：协议核心（帧编解码、握手、会话、设备表、键位解析），无 I/O，已有单元测试。
 - `crates/nuphy-hid`：Linux hidraw 传输（通过 sysfs 枚举，无需 libudev）。
+- `crates/nuphy-core`：CLI 与 GUI 共用的“打开键盘 / 自动备份 / 还原”逻辑。
+- `crates/nuphy-gui`：桌面图形界面（Tauri 2 + 原生 HTML/JS，无需 node 构建），中英双语，会跟随系统语言，右上角可切换。
 - `crates/nuphy-cli`：命令行工具 `nuphy`：查看（`list` / `info` / `keys` / `get`）、改键（`set` / `reset`）、
   整表备份与还原（`backup` / `restore`）。完全离线，不需要浏览器或网络。
 - 只实现了机械款协议（Node75、Air75 V3 等）；Hall（HE）款只有命令表。
 - 在 Node 75 LP（固件 1.0.10.6）上验证过读写，其他型号未测，详见 [docs/PROTOCOL.md](docs/PROTOCOL.md) §9。
 
-## 使用
+## 图形界面
+
+```bash
+cargo run -p nuphy-gui --release   # 需要 libwebkit2gtk-4.1-dev（Ubuntu：sudo apt install libwebkit2gtk-4.1-dev）
+```
+
+点选键盘图上的一个键 → 输入按键名（或点快捷按钮）→ 应用。橙色圆点表示与出厂设置不同；顶栏“备份”可查看自动备份并还原。
+在普通浏览器里直接打开 `crates/nuphy-gui/dist/index.html` 会进入演示模式，不接键盘，方便预览界面。
+
+## 命令行使用
 
 ```bash
 # 1. 让当前用户能打开 hidraw（一次性）
@@ -39,4 +50,4 @@ $N backup my.bin && $N restore my.bin # 整表备份 / 还原
 
 ## 下一步
 
-GUI（候选：Tauri）→ Windows/macOS 传输（hidapi）→ 宏 / TapDance / 灯光等其余命令。
+Windows/macOS 传输（hidapi）和打包发布→ 宏 / TapDance / 灯光等其余命令。
