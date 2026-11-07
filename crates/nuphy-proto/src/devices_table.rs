@@ -3,6 +3,7 @@
 
 use crate::device::{DeviceInfo, Family, Mode};
 
+#[rustfmt::skip]
 pub static DEVICES: &[DeviceInfo] = &[
     DeviceInfo { vid: 0x19F5, pid: 0x1027, name: "Kick75High", mode: Mode::Normal, family: Family::Mechanical },
     DeviceInfo { vid: 0x19F5, pid: 0x0721, name: "Kick75High", mode: Mode::Bootloader, family: Family::Mechanical },

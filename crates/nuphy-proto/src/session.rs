@@ -7,8 +7,8 @@ use std::time::Duration;
 
 use crate::base::BaseInfo;
 use crate::cmd::mech;
-use crate::keycode::KeyCode;
 use crate::frame::{self, Frame, FrameError, Request, Response, MAX_PAYLOAD};
+use crate::keycode::KeyCode;
 
 /// A raw 64-byte HID report pipe (no report id on the wire).
 pub trait Transport {
@@ -65,13 +65,8 @@ impl<T: Transport> Session<T> {
         if random[20] == 0 {
             random[20] = 1; // avoid the 0 → 0xAA special case; any non-zero works
         }
-        let mut s = Self {
-            transport,
-            key: 0,
-            events: VecDeque::new(),
-            timeout: Duration::from_millis(500),
-            retries: 3,
-        };
+        let mut s =
+            Self { transport, key: 0, events: VecDeque::new(), timeout: Duration::from_millis(500), retries: 3 };
         let (frame, key) = frame::handshake(&random);
         s.exchange(&frame, mech::SET_SECRET_KEY, 0)?;
         s.key = key;
@@ -319,10 +314,7 @@ mod tests {
         let fake = Fake::new(vec![(mech::GET_BASE, vec![1, 2, 3, 4])]);
         let mut s = Session::open(fake, rnd()).unwrap();
         s.transport_mut().drop_next = 100;
-        assert!(matches!(
-            s.request(&Request::read(mech::GET_BASE, 0, 0, 4)),
-            Err(SessionError::Timeout)
-        ));
+        assert!(matches!(s.request(&Request::read(mech::GET_BASE, 0, 0, 4)), Err(SessionError::Timeout)));
     }
 
     fn node75_fake() -> Fake {

@@ -64,11 +64,7 @@ pub fn enumerate_in(sys: &Path, dev: &Path) -> io::Result<Vec<HidrawInfo>> {
         if vid != NUPHY_VID {
             continue;
         }
-        let hid_name = uevent
-            .lines()
-            .find_map(|l| l.strip_prefix("HID_NAME="))
-            .unwrap_or("")
-            .to_string();
+        let hid_name = uevent.lines().find_map(|l| l.strip_prefix("HID_NAME=")).unwrap_or("").to_string();
         let desc = fs::read(devdir.join("report_descriptor")).unwrap_or_default();
         let interface = fs::canonicalize(&devdir).ok().and_then(|p| interface_from_link(&p));
         out.push(HidrawInfo {

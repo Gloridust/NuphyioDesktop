@@ -66,10 +66,7 @@ impl Backup {
     /// Whether this backup can be written to a keyboard with `base` geometry.
     pub fn check_compatible(&self, vid: u16, pid: u16, base: &BaseInfo) -> Result<(), String> {
         if (self.vid, self.pid) != (vid, pid) {
-            return Err(format!(
-                "backup is for {:04x}:{:04x}, keyboard is {vid:04x}:{pid:04x}",
-                self.vid, self.pid
-            ));
+            return Err(format!("backup is for {:04x}:{:04x}, keyboard is {vid:04x}:{pid:04x}", self.vid, self.pid));
         }
         if usize::from(self.layer_bytes) != base.layer_bytes() || self.layer_count != base.layer_count {
             return Err("backup geometry differs from the keyboard (firmware changed?)".into());

@@ -16,6 +16,6 @@ mod devices_table;
 
 pub use base::BaseInfo;
 pub use device::{lookup, DeviceInfo, Family, Mode, NUPHY_VID};
-pub use keycode::KeyCode;
 pub use frame::{Frame, FrameError, Request, Response};
+pub use keycode::KeyCode;
 pub use session::{Session, SessionError, Transport};

@@ -232,7 +232,15 @@ fn main() {
     tauri::Builder::default()
         .manage(App::default())
         .invoke_handler(tauri::generate_handler![
-            connect, disconnect, refresh, parse_key, set_key, reset_key, list_backups, make_backup, restore_backup
+            connect,
+            disconnect,
+            refresh,
+            parse_key,
+            set_key,
+            reset_key,
+            list_backups,
+            make_backup,
+            restore_backup
         ])
         .run(tauri::generate_context!())
         .expect("failed to start NuPhy Desktop");

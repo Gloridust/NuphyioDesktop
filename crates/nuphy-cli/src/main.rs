@@ -103,8 +103,12 @@ fn run(cli: Cli) -> Result<(), String> {
             let b = kb.base;
             println!("device     : {} ({:04x}:{:04x})", kb.info.name, kb.info.vid, kb.info.pid);
             println!("firmware   : {}", format_firmware_version(&fw).unwrap_or_else(|| "?".into()));
-            println!("mode       : {} (layers {}..{} active)", b.current_mode, b.active_base_layer(),
-                b.active_base_layer() + b.layers_per_mode - 1);
+            println!(
+                "mode       : {} (layers {}..{} active)",
+                b.current_mode,
+                b.active_base_layer(),
+                b.active_base_layer() + b.layers_per_mode - 1
+            );
             println!("layers     : {} total, {} per mode", b.layer_count, b.layers_per_mode);
             println!("matrix     : {} rows x {} cols + {} extra slots", b.rows, b.cols, b.extra_keys);
             Ok(())
@@ -114,7 +118,8 @@ fn run(cli: Cli) -> Result<(), String> {
             let b = kb.base;
             let cmd = if default { mech::GET_DEFAULT_KEYS } else { mech::GET_USE_KEYS };
             let raw = kb.s.read_region(cmd, 0, b.total_key_bytes()).map_err(e2s)?;
-            let layers: Vec<u8> = if all { (0..b.layer_count).collect() } else { vec![layer.unwrap_or(b.active_base_layer())] };
+            let layers: Vec<u8> =
+                if all { (0..b.layer_count).collect() } else { vec![layer.unwrap_or(b.active_base_layer())] };
             for l in layers {
                 if l >= b.layer_count {
                     return Err(format!("layer {l} out of range (0..{})", b.layer_count));
@@ -129,7 +134,11 @@ fn run(cli: Cli) -> Result<(), String> {
             let (l, slot) = resolve(&kb.base, pos)?;
             let cur = kb.s.get_key(&kb.base, l, slot).map_err(e2s)?;
             let def = kb.s.default_key(&kb.base, l, slot).map_err(e2s)?;
-            println!("layer {l} slot {slot} ({}): {cur}  [{:#06x}]  default {def}", describe_slot(&kb.base, slot), cur.0);
+            println!(
+                "layer {l} slot {slot} ({}): {cur}  [{:#06x}]  default {def}",
+                describe_slot(&kb.base, slot),
+                cur.0
+            );
             Ok(())
         }
         Cmd::Set { pos, key } => {
@@ -251,7 +260,11 @@ fn label(k: KeyCode) -> String {
         0x0001 => "_".into(),
         _ => {
             let s = k.to_string();
-            if s.len() > 8 { format!("{:#06x}", k.0) } else { s }
+            if s.len() > 8 {
+                format!("{:#06x}", k.0)
+            } else {
+                s
+            }
         }
     }
 }

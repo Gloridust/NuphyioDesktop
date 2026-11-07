@@ -26,6 +26,7 @@ const QK_LIGHTING: u16 = 0x7800;
 const QK_KB: u16 = 0x7E00;
 
 /// (name, code) for the basic page. First name is the canonical one.
+#[rustfmt::skip]
 const BASIC: &[(&str, u8)] = &[
     ("NO", 0x00), ("TRNS", 0x01),
     ("A", 0x04), ("B", 0x05), ("C", 0x06), ("D", 0x07), ("E", 0x08), ("F", 0x09), ("G", 0x0A),
@@ -57,6 +58,7 @@ const BASIC: &[(&str, u8)] = &[
 ];
 
 /// Extra spellings accepted by the parser.
+#[rustfmt::skip]
 const ALIASES: &[(&str, &str)] = &[
     ("ENTER", "ENT"), ("ESCAPE", "ESC"), ("BACKSPACE", "BSPC"), ("SPACE", "SPC"), ("MINUS", "MINS"),
     ("EQUAL", "EQL"), ("CAPSLOCK", "CAPS"), ("DELETE", "DEL"), ("INSERT", "INS"), ("RIGHT", "RGHT"),
@@ -156,8 +158,7 @@ impl fmt::Display for KeyCode {
             QK_MODS..=QK_MODS_MAX => {
                 let m = (c >> 8) & 0x1F;
                 let side = if m & 0x10 != 0 { "R" } else { "L" };
-                let names: Vec<&str> =
-                    MOD_NAMES.iter().filter(|(_, b)| m & b != 0).map(|(n, _)| *n).collect();
+                let names: Vec<&str> = MOD_NAMES.iter().filter(|(_, b)| m & b != 0).map(|(n, _)| *n).collect();
                 let inner = KeyCode(c & 0xFF);
                 write!(f, "{side}{}({inner})", names.join(""))
             }
@@ -230,7 +231,10 @@ mod preset_tests {
     /// The GUI's quick-pick buttons; they must all parse and round-trip.
     #[test]
     fn gui_presets_parse() {
-        for n in ["esc", "caps", "pscr", "del", "ins", "home", "end", "pgup", "pgdn", "lgui", "mute", "vold", "volu", "mply", "trns", "no"] {
+        for n in [
+            "esc", "caps", "pscr", "del", "ins", "home", "end", "pgup", "pgdn", "lgui", "mute", "vold", "volu", "mply",
+            "trns", "no",
+        ] {
             let k = KeyCode::parse(n).unwrap_or_else(|e| panic!("{n}: {e}"));
             assert_eq!(KeyCode::parse(&k.to_string()).unwrap(), k, "{n}");
         }

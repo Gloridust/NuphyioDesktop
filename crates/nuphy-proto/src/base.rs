@@ -22,14 +22,7 @@ impl BaseInfo {
         }
         let raw = if d[5] == session_key { 0 } else { d[5] };
         let extra_keys = if raw & 0x80 != 0 { raw & 0x7F } else { 2 };
-        Some(Self {
-            current_mode: d[0],
-            layer_count: d[1],
-            layers_per_mode: d[2],
-            rows: d[3],
-            cols: d[4],
-            extra_keys,
-        })
+        Some(Self { current_mode: d[0], layer_count: d[1], layers_per_mode: d[2], rows: d[3], cols: d[4], extra_keys })
     }
 
     pub fn slots_per_layer(&self) -> usize {
