@@ -16,7 +16,7 @@ jobs:
     # Built on the oldest supported Ubuntu so the packages run on 22.04 and newer.
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Check the tag matches the version in the sources
         id: ver
