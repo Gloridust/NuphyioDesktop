@@ -42,6 +42,9 @@ impl OpenError {
     }
 }
 
+/// One-line shell command that installs the hidraw udev rule (same rule as `contrib/udev/70-nuphy.rules`).
+pub const UDEV_INSTALL_CMD: &str = r#"echo 'SUBSYSTEM=="hidraw", ATTRS{idVendor}=="19f5", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/70-nuphy.rules && sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=hidraw"#;
+
 impl fmt::Display for OpenError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -49,8 +52,9 @@ impl fmt::Display for OpenError {
             Self::NotNuphy(p) => write!(f, "{} is not a NuPhy hidraw node", p.display()),
             Self::Permission(p) => write!(
                 f,
-                "cannot open {}: permission denied.\nInstall contrib/udev/70-nuphy.rules (see docs/PROTOCOL.md §10).",
-                p.display()
+                "cannot open {}: permission denied.\nInstall the udev rule once, then replug the keyboard:\n  {}",
+                p.display(),
+                UDEV_INSTALL_CMD
             ),
             Self::UnsupportedFamily(n) => {
                 write!(f, "{n} uses a protocol family that is not implemented (only the mechanical family is)")

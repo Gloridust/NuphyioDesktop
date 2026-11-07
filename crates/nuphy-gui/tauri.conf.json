@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "NuPhy Desktop",
+  "productName": "nuphy-desktop",
   "version": "0.1.0",
   "identifier": "io.github.gloridust.nuphy-desktop",
   "build": {
@@ -24,9 +24,30 @@
     }
   },
   "bundle": {
-    "active": false,
+    "active": true,
+    "targets": [
+      "deb",
+      "appimage"
+    ],
     "icon": [
       "icons/icon.png"
-    ]
+    ],
+    "category": "Utility",
+    "shortDescription": "Offline key remapper for NuPhy keyboards",
+    "longDescription": "Remap keys on NuPhy keyboards over USB or the 2.4G receiver, fully offline. A native replacement for the NuPhyIO web app.",
+    "license": "MIT",
+    "linux": {
+      "deb": {
+        "files": {
+          "/usr/lib/udev/rules.d/70-nuphy.rules": "../../contrib/udev/70-nuphy.rules"
+        },
+        "postInstallScript": "packaging/postinst.sh",
+        "section": "utils",
+        "desktopTemplate": "packaging/nuphy-desktop.desktop"
+      }
+    },
+    "publisher": "Gloridust",
+    "homepage": "https://github.com/Gloridust/NuphyioDesktop",
+    "copyright": "Copyright (c) 2026 Ethan Zou"
   }
 }

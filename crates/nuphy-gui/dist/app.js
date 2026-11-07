@@ -17,7 +17,8 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
-const UDEV_CMD = "sudo cp contrib/udev/70-nuphy.rules /etc/udev/rules.d/ && sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=hidraw";
+// Self-contained so it works without the source tree (the .deb installs the rule by itself).
+const UDEV_CMD = `echo 'SUBSYSTEM=="hidraw", ATTRS{idVendor}=="19f5", TAG+="uaccess"' | sudo tee /etc/udev/rules.d/70-nuphy.rules && sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=hidraw`;
 const CATS = [
   { id: "basic", icon: "A" }, { id: "media", icon: "♪" }, { id: "light", icon: "☀" },
   { id: "special", icon: "◇" }, { id: "custom", icon: "#" }

@@ -15,6 +15,17 @@ NuPhy 官方配置工具 [NuPhyIO](https://drive.nuphyio.com) 是纯前端的 We
 - 只实现了机械款协议（Node75、Air75 V3 等）；Hall（HE）款只有命令表。
 - 在 Node 75 LP（固件 1.0.10.6）上验证过读写，其他型号未测，详见 [docs/PROTOCOL.md](docs/PROTOCOL.md) §9。
 
+## 安装
+
+从 [Releases](https://github.com/Gloridust/NuphyioDesktop/releases) 下载（目前只有 Linux x86_64）：
+
+- **Ubuntu / Debian**：`nuphy-desktop_<版本>_amd64.deb`，`sudo apt install ./nuphy-desktop_<版本>_amd64.deb`。
+  会同时装好 udev 规则，插上键盘就能用（已经插着的话重新插拔一次）。
+- **其他发行版**：`nuphy-desktop_<版本>_amd64.AppImage`，`chmod +x` 后直接运行；需要先按下面“命令行使用”第 1 步装一次 udev 规则。
+- **命令行工具**：`nuphy-cli-<版本>-x86_64-linux.tar.gz`，里面有 `nuphy` 和 udev 规则。
+
+改动记录见 [CHANGELOG.md](CHANGELOG.md)。
+
 ## 图形界面
 
 ```bash
@@ -57,4 +68,12 @@ $N backup my.bin && $N restore my.bin # 整表备份 / 还原
 
 ## 下一步
 
-Windows/macOS 传输（hidapi）和打包发布→ 宏 / TapDance / 灯光等其余命令。
+Windows/macOS 传输（hidapi）和安装包 → 宏 / TapDance / 灯光等其余命令。
+
+## 发布新版本
+
+1. 改 `Cargo.toml` 的 `workspace.package.version` 和 `crates/nuphy-gui/tauri.conf.json` 的 `version`，在 `CHANGELOG.md` 加上这一版的小节。
+2. 合进 `main` 后打 tag 并推送：`git tag v<版本> && git push origin v<版本>`。
+3. `.github/workflows/release.yml` 会检查三处版本一致，编译 .deb / .AppImage / 命令行压缩包，并以 CHANGELOG 里那一节为说明发布 Release。
+
+本地打包：`cd crates/nuphy-gui && npx @tauri-apps/cli@2 build`，产物在 `target/release/bundle/`。
